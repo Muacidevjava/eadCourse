@@ -1,6 +1,5 @@
 package com.ead.course.controllers;
 
-import com.ead.course.dtos.CourseDto;
 import com.ead.course.dtos.ModuleDto;
 import com.ead.course.models.CourseModel;
 import com.ead.course.models.ModuleModel;
@@ -30,7 +29,7 @@ public class ModuleController {
     CourseService courseService;
 
     @PostMapping("/courses/{courseId}/modules")
-    public ResponseEntity<Object> saveCourse(@PathVariable(value = "courseId") UUID courseId,
+    public ResponseEntity<Object> saveModule(@PathVariable(value = "courseId") UUID courseId,
                                              @RequestBody @Valid ModuleDto moduleDto) {
 
         Optional<CourseModel> courseModelOptional = courseService.findById(courseId);
@@ -45,9 +44,10 @@ public class ModuleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(moduleService.save(moduleModel));
 
     }
+
     @DeleteMapping("/courses/{courseId}/modules{moduleId}")
-    public ResponseEntity<Object> deleteCourse(@PathVariable(value = "couserId0") UUID courseId,
-                                              @PathVariable(value = "moduleId") UUID moduleId) {
+    public ResponseEntity<Object> deleteModule(@PathVariable(value = "couserId") UUID courseId,
+                                               @PathVariable(value = "moduleId") UUID moduleId) {
         Optional<ModuleModel> moduleModelOptional = moduleService.findModuleIntoCourse(courseId, moduleId);
         if (!moduleModelOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Module Not Found for this Course");
@@ -55,6 +55,7 @@ public class ModuleController {
         moduleService.delete(moduleModelOptional.get());
         return ResponseEntity.status(HttpStatus.OK).body("Module Deleted successfully");
     }
+
     @PutMapping("/courses/{courseId}/modules{moduleId}")
     public ResponseEntity<Object> updateModule(@PathVariable(value = "courseId") UUID courseId,
                                                @PathVariable(value = "moduleId") UUID moduleId,
@@ -70,20 +71,21 @@ public class ModuleController {
         return ResponseEntity.status(HttpStatus.OK).body(moduleService.save(moduleModel));
 
     }
+
     @GetMapping("/courses/{courseId}/modules")
     public ResponseEntity<List<ModuleModel>> getAllModules(@PathVariable(value = "courseId") UUID courseId) {
-        return  ResponseEntity.status(HttpStatus.OK).body(moduleService.findAllByCourse(courseId));
+        return ResponseEntity.status(HttpStatus.OK).body(moduleService.findAllByCourse(courseId));
     }
 
 
     @GetMapping("/courses/{courseId}/modules/{moduleId}")
     public ResponseEntity<Object> getOneModule(@PathVariable(value = "courseId") UUID courseId
-                                               ,@PathVariable(value = "moduleId") UUID moduleId) {
+            , @PathVariable(value = "moduleId") UUID moduleId) {
         Optional<ModuleModel> moduleModelOptional = moduleService.findModuleIntoCourse(courseId, moduleId);
         if (!moduleModelOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Module Not Found for this Course");
         }
-        return  ResponseEntity.status(HttpStatus.OK).body(moduleModelOptional.get());
+        return ResponseEntity.status(HttpStatus.OK).body(moduleModelOptional.get());
     }
 
 }
